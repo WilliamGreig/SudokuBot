@@ -1,4 +1,2 @@
-from selenium import webdriver
+# Monkey Miner
 
-driver = webdriver.Chrome()
-driver.get('https://www.google.com/')
