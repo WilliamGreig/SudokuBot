@@ -152,18 +152,59 @@ class Sudoku:
                 for x in board_coordinates:
                     cells = self.get_intersecting_row_cols(x[1], x[0])
                     quadrant = self.get_quadrant(x[1], x[0])
-                    for cell in cells:
-                        coor_x = cell[0] * width / self.size
-                        coor_y = cell[1] * width / self.size
-                        pygame.draw.rect(screen, pygame.Color(255, 204, 204), pygame.Rect(coor_x, coor_y, width / self.size, height / self.size))
                     for c in quadrant:
-                        coor_x = c[0] * width / self.size
-                        coor_y = c[1] * width / self.size
-                        pygame.draw.rect(screen, pygame.Color(255, 204, 204), pygame.Rect(coor_x, coor_y, width / self.size, height / self.size))
+                        cells.append(c)
+                    for cell in cells:
+                        try:
+                            if self.board[int(cell[1])][int(cell[0])] == "":
+                                coor_x = cell[0] * width / self.size
+                                coor_y = cell[1] * width / self.size
+                                pygame.draw.rect(screen, pygame.Color(255, 204, 204), pygame.Rect(coor_x, coor_y, width / self.size, height / self.size))
+                        except:
+                            pass
 
     def print(self):
         for r in self.board:
             print(r)
+
+
+    # there should only be 9 digits (1-9), uniquely in a list
+    def uniqueList(self, num_list):
+        num_list.sort()
+        if num_list == list_nums:
+            return True
+        return False
+
+
+    def checkSolution(self):
+        # check rows, columns, and quadrants for unique numbers
+        for r in range(len(self.board)):
+            row_list = []
+            col_list = []
+            for i in range(len(self.board[r])):
+                if self.board[r][i] != "" and self.board[i][r] != "":
+                    row_list.append(int(self.board[r][i]))
+                    col_list.append(int(self.board[i][r]))
+                else:
+                    return False
+            if self.uniqueList(row_list) == False or self.uniqueList(col_list):
+                return False
+
+        for x in range(3):
+            for y in range(3):
+                cells = self.get_quadrant(x * math.sqrt(self.size), y * math.sqrt(self.size))
+                n_list = []
+                for c in cells:
+                    try:
+                        n_list.append(self.board)
+                    except:
+                        pass
+
+        return True
+
+    def solve(self):
+        while self.checkSolution() == False:
+            break
 
     def render(self):
         screen.fill(background_colour)
@@ -175,4 +216,4 @@ class Sudoku:
 
 
 s = Sudoku(preset=True)
-s.play()
+s.solve()
